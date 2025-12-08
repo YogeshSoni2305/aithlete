@@ -79,11 +79,31 @@ export async function GET(req: Request) {
                     thumbnail
                 });
             }
+        }
         });
 
-        return NextResponse.json({ results });
-    } catch (error) {
-        console.error("Content fetch error:", error);
-        return NextResponse.json({ error: "Failed to fetch content" }, { status: 500 });
+    // Fallback if no results found (e.g., scraping blocked)
+    if (results.length === 0) {
+        if (type === "video") {
+            results.push({
+                title: `Watch ${query} tutorials on YouTube`,
+                url: `https://www.youtube.com/results?search_query=${encodeURIComponent(query + " workout")}`,
+                source: "YouTube Search",
+                thumbnail: null
+            });
+        } else {
+            results.push({
+                title: `Find ${query} recipes on Google`,
+                url: `https://www.google.com/search?q=${encodeURIComponent(query + " healthy recipe")}`,
+                source: "Google Search",
+                thumbnail: null
+            });
+        }
     }
+
+    return NextResponse.json({ results });
+} catch (error) {
+    console.error("Content fetch error:", error);
+    return NextResponse.json({ error: "Failed to fetch content" }, { status: 500 });
+}
 }
