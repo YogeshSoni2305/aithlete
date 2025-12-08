@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { DailyDiet, Meal } from "@/types";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Loader2, ImageIcon, Volume2, VolumeX, Coffee, Sun, Moon, ExternalLink, BookOpen } from "lucide-react";
+import { X, Loader2, ImageIcon, Volume2, VolumeX, Coffee, Sun, Moon, ExternalLink, BookOpen, Flame } from "lucide-react";
 
 interface DietPlanProps {
     plan: DailyDiet[];
@@ -112,7 +112,8 @@ export default function DietPlan({ plan }: DietPlanProps) {
             <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-3">{meal.description}</p>
 
             <div className="flex flex-wrap gap-2 text-xs mb-2">
-                <span className="px-3 py-1.5 rounded-full bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 font-medium">
+                <span className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 font-medium">
+                    <Flame className="w-3 h-3 text-orange-500 fill-orange-500" />
                     {meal.calories}
                 </span>
                 <span className="px-3 py-1.5 rounded-full bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 font-medium">

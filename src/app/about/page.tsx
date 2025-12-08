@@ -33,9 +33,31 @@ export default function AboutPage() {
                         whileInView={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.8 }}
                     >
-                        <div className="w-40 h-40 mx-auto mb-8 rounded-full bg-gradient-to-tr from-purple-500 to-pink-500 flex items-center justify-center shadow-xl">
-                            <span className="text-6xl">👋</span>
-                        </div>
+                        <motion.div
+                            className="w-40 h-40 mx-auto mb-8 rounded-full bg-gradient-to-tr from-purple-500 to-pink-500 flex items-center justify-center shadow-xl"
+                            whileHover={{ scale: 1.05 }}
+                        >
+                            <style jsx>{`
+                                @keyframes wave {
+                                    0% { transform: rotate(0deg); }
+                                    10% { transform: rotate(14deg); }
+                                    20% { transform: rotate(-8deg); }
+                                    30% { transform: rotate(14deg); }
+                                    40% { transform: rotate(-4deg); }
+                                    50% { transform: rotate(10deg); }
+                                    60% { transform: rotate(0deg); }
+                                    100% { transform: rotate(0deg); }
+                                }
+                                .waving-hand {
+                                    display: inline-block;
+                                    transform-origin: 70% 70%;
+                                    animation: wave 2s infinite;
+                                }
+                            `}</style>
+                            <span className="text-6xl waving-hand">
+                                👋
+                            </span>
+                        </motion.div>
                         <h1 className="text-5xl sm:text-7xl font-bold mb-6">
                             Hi, I'm <span className="gradient-text">Abhay</span>
                         </h1>

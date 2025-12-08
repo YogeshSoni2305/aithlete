@@ -7,7 +7,11 @@ import { motion } from "framer-motion";
 
 export default function TrackerPage() {
     return (
-        <main className="min-h-screen bg-neutral-50 dark:bg-black text-black dark:text-white transition-colors duration-500 pt-24">
+        <main className="min-h-screen bg-neutral-50 dark:bg-black text-black dark:text-white transition-colors duration-500 pt-24 relative overflow-hidden">
+            {/* Background Blobs */}
+            <div className="absolute top-0 left-0 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl -z-10 animate-pulse" />
+            <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-3xl -z-10 animate-pulse delay-1000" />
+
             <Navbar />
 
             <div className="container mx-auto px-4 sm:px-6 py-8 max-w-7xl">

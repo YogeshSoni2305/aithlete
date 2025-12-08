@@ -59,6 +59,17 @@ export async function POST(req: Request) {
         const body = await req.json();
         const { type, data } = body;
 
+        // Date Feature Restriction
+        // All users can log, but only "Abhay Kumar" can backdate/future-date.
+        // Others are forced to use "today".
+        const userName = `${user.firstName || ""} ${user.lastName || ""}`.trim().toLowerCase();
+        const todayStr = new Date().toISOString().split("T")[0];
+        const requestDateStr = new Date(data.date).toISOString().split("T")[0];
+
+        if (userName !== "abhay kumar" && requestDateStr !== todayStr) {
+            return NextResponse.json({ error: "Date Selection Restricted: Only Abhay Kumar can select custom dates." }, { status: 403 });
+        }
+
         // Ensure user exists in DB
         const dbUser = await prisma.user.upsert({
             where: { clerkId: user.id },

@@ -106,6 +106,23 @@ export async function POST(req: Request) {
       - For "Keto": Low carb Indian (Paneer/Chicken/Fish tikka, Leafy greens, Ghee).
       - Use Indian cooking styles (Curry, Tandoori, Stir-fry).
       
+      *** CALORIE & MACRO GUIDELINES (CRITICAL) ***
+      - TARGET CALORIES: 1800 - 2500+ kcal (Never below 1500 unless specifically requested).
+      - Ensure portions are realistic for an adult human.
+      - Breakfast: ~400-600 kcal.
+      - Lunch: ~700-900 kcal.
+      - Dinner: ~600-800 kcal.
+      - Snack: ~200-400 kcal.
+
+      *** MEAL COMPOSITION RULES (Complete Indian Meals) ***
+      - LUNCH & DINNER MUST BE COMPLETE MEALS, consisting of:
+        1. Main Protein/Curry (Dal, Paneer, Chicken, Fish, etc.)
+        2. Carbohydrate Source (2-3 Rotis, large bowl Rice)
+        3. Side Dish (Sabzi/Dry Veg)
+        4. Fiber/Probiotic (Salad, Cucumber, Curd/Raita)
+      - Example: "Paneer Butter Masala (1 bowl) + 3 Chapatis + Bhindi Fry + Green Salad"
+      - DO NOT suggest single items like "1 bowl dal" or "Grilled Chicken" alone.
+      
       *** CRITICAL RULES FOR VARIETY & USABILITY ***
       1. NO REPETITION: Every day must feel unique. Do not repeat the same exact meal structure.
       2. PROGRESSION: The workout should feel like a structured week, not random exercises.
