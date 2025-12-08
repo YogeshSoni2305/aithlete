@@ -22,12 +22,19 @@ import {
     RotateCcw
 } from "lucide-react";
 import { WorkoutLog, MealLog, WeightLog } from "@/types";
+import { useUser } from "@clerk/nextjs";
+
 
 export default function Tracker() {
     const [activeTab, setActiveTab] = useState<"workout" | "meal" | "weight">("workout");
     const [workoutLogs, setWorkoutLogs] = useState<WorkoutLog[]>([]);
     const [mealLogs, setMealLogs] = useState<MealLog[]>([]);
     const [weightLogs, setWeightLogs] = useState<WeightLog[]>([]);
+
+    const { user } = useUser();
+    const isAbhay = user?.fullName?.toLowerCase() === "abhay kumar" ||
+        (user?.firstName?.toLowerCase() === "abhay" && user?.lastName?.toLowerCase() === "kumar");
+
 
     // Form states
     // Form states
@@ -252,15 +259,17 @@ export default function Tracker() {
                                 Log New Workout
                             </h3>
                             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-5">
-                                <div className="space-y-2">
-                                    <label className="text-xs font-semibold text-neutral-500 uppercase tracking-wider ml-1">Date</label>
-                                    <input
-                                        type="date"
-                                        value={workoutForm.date}
-                                        onChange={e => setWorkoutForm({ ...workoutForm, date: e.target.value })}
-                                        className="w-full p-4 rounded-2xl bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-200 dark:border-neutral-700 focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-all font-medium text-neutral-600 dark:text-neutral-300"
-                                    />
-                                </div>
+                                {isAbhay && (
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-semibold text-neutral-500 uppercase tracking-wider ml-1">Date</label>
+                                        <input
+                                            type="date"
+                                            value={workoutForm.date}
+                                            onChange={e => setWorkoutForm({ ...workoutForm, date: e.target.value })}
+                                            className="w-full p-4 rounded-2xl bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-200 dark:border-neutral-700 focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-all font-medium text-neutral-600 dark:text-neutral-300"
+                                        />
+                                    </div>
+                                )}
                                 <div className="space-y-2">
                                     <label className="text-xs font-semibold text-neutral-500 uppercase tracking-wider ml-1">Exercise</label>
                                     <input
@@ -380,15 +389,17 @@ export default function Tracker() {
                                 Log Meal
                             </h3>
                             <div className="grid grid-cols-1 md:grid-cols-5 gap-5 mb-5">
-                                <div className="space-y-2 col-span-1 md:col-span-1">
-                                    <label className="text-xs font-semibold text-neutral-500 uppercase tracking-wider ml-1">Date</label>
-                                    <input
-                                        type="date"
-                                        value={mealForm.date}
-                                        onChange={e => setMealForm({ ...mealForm, date: e.target.value })}
-                                        className="w-full p-4 rounded-2xl bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-200 dark:border-neutral-700 focus:outline-none focus:ring-2 focus:ring-green-500/50 transition-all font-medium text-neutral-600 dark:text-neutral-300"
-                                    />
-                                </div>
+                                {isAbhay && (
+                                    <div className="space-y-2 col-span-1 md:col-span-1">
+                                        <label className="text-xs font-semibold text-neutral-500 uppercase tracking-wider ml-1">Date</label>
+                                        <input
+                                            type="date"
+                                            value={mealForm.date}
+                                            onChange={e => setMealForm({ ...mealForm, date: e.target.value })}
+                                            className="w-full p-4 rounded-2xl bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-200 dark:border-neutral-700 focus:outline-none focus:ring-2 focus:ring-green-500/50 transition-all font-medium text-neutral-600 dark:text-neutral-300"
+                                        />
+                                    </div>
+                                )}
                                 <div className="space-y-2 col-span-1 md:col-span-4">
                                     <label className="text-xs font-semibold text-neutral-500 uppercase tracking-wider ml-1">Meal Name</label>
                                     <input
@@ -562,15 +573,17 @@ export default function Tracker() {
 
                         {/* Add Weight Form */}
                         <div className="bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl p-8 rounded-3xl border border-neutral-200/50 dark:border-neutral-800/50 shadow-xl shadow-blue-500/5 flex flex-col md:flex-row gap-6 items-end">
-                            <div className="w-full md:w-48">
-                                <label className="block text-xs font-semibold mb-2 text-neutral-500 uppercase tracking-wider ml-1">Date</label>
-                                <input
-                                    type="date"
-                                    value={weightForm.date}
-                                    onChange={e => setWeightForm({ ...weightForm, date: e.target.value })}
-                                    className="w-full p-4 rounded-2xl bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-200 dark:border-neutral-700 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all font-medium text-neutral-600 dark:text-neutral-300"
-                                />
-                            </div>
+                            {isAbhay && (
+                                <div className="w-full md:w-48">
+                                    <label className="block text-xs font-semibold mb-2 text-neutral-500 uppercase tracking-wider ml-1">Date</label>
+                                    <input
+                                        type="date"
+                                        value={weightForm.date}
+                                        onChange={e => setWeightForm({ ...weightForm, date: e.target.value })}
+                                        className="w-full p-4 rounded-2xl bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-200 dark:border-neutral-700 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all font-medium text-neutral-600 dark:text-neutral-300"
+                                    />
+                                </div>
+                            )}
                             <div className="flex-1 w-full">
                                 <label className="block text-xs font-semibold mb-2 text-neutral-500 uppercase tracking-wider ml-1">Current Weight (kg)</label>
                                 <input
