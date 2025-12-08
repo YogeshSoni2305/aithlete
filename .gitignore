@@ -10,6 +10,10 @@
 !.yarn/releases
 !.yarn/versions
 
+# mac junk
+.DS_Store
+._*
+
 # testing
 /coverage
 
