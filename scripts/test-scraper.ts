@@ -17,7 +17,7 @@ async function testScraper(query: string) {
         });
 
         const $ = cheerio.load(data);
-        const results = [];
+        const results: { title: string; rawLink: string | undefined }[] = [];
 
         console.log("HTML fetched, length:", data.length);
 
