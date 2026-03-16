@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { currentUser } from "@clerk/nextjs/server";
 import prisma from "@/lib/prisma";
+import { safeDbCall, safeApiResponse } from "@/lib/safety";
 
 export const dynamic = "force-dynamic";
 
@@ -8,44 +9,44 @@ export async function GET(req: Request) {
     try {
         const user = await currentUser();
         if (!user) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+            return safeApiResponse({ error: "Unauthorized" }, 401);
         }
 
         const { searchParams } = new URL(req.url);
         const type = searchParams.get("type"); // workout, meal, weight
 
-        const dbUser = await prisma.user.findUnique({
+        const dbUser = await safeDbCall(() => prisma.user.findUnique({
             where: { clerkId: user.id },
-        });
+        }), null);
 
         if (!dbUser) {
-            return NextResponse.json([]);
+            return safeApiResponse([]);
         }
 
         let logs;
         if (type === "workout") {
-            logs = await prisma.workoutLog.findMany({
+            logs = await safeDbCall(() => prisma.workoutLog.findMany({
                 where: { userId: dbUser.id },
                 orderBy: { date: "desc" },
-            });
+            }), []);
         } else if (type === "meal") {
-            logs = await prisma.mealLog.findMany({
+            logs = await safeDbCall(() => prisma.mealLog.findMany({
                 where: { userId: dbUser.id },
                 orderBy: { date: "desc" },
-            });
+            }), []);
         } else if (type === "weight") {
-            logs = await prisma.weightLog.findMany({
+            logs = await safeDbCall(() => prisma.weightLog.findMany({
                 where: { userId: dbUser.id },
                 orderBy: { date: "asc" },
-            });
+            }), []);
         } else {
-            return NextResponse.json({ error: "Invalid type" }, { status: 400 });
+            return safeApiResponse({ error: "Invalid type" }, 400);
         }
 
-        return NextResponse.json(logs);
+        return safeApiResponse(logs);
     } catch (error) {
         console.error("Error fetching logs:", error);
-        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+        return safeApiResponse({ error: "Internal Server Error" }, 500);
     }
 }
 
@@ -53,56 +54,58 @@ export async function POST(req: Request) {
     try {
         const user = await currentUser();
         if (!user) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+            return safeApiResponse({ error: "Unauthorized" }, 401);
         }
 
-        const body = await req.json();
+        const body = await req.json().catch(() => null);
+        if (!body) return safeApiResponse({ error: "Invalid JSON" }, 400);
+
         const { type, data } = body;
 
         // Date Feature Restriction
         // All users can log, but only "Yogesh" or "Vijay" can backdate/future-date.
-        // Others are forced to use "today".
         const userName = (user.firstName || "").toLowerCase();
         const isAdmin = ["yogesh", "vijay"].includes(userName);
         const todayStr = new Date().toISOString().split("T")[0];
         const requestDateStr = new Date(data.date).toISOString().split("T")[0];
 
         if (!isAdmin && requestDateStr !== todayStr) {
-            return NextResponse.json({ error: "Date Selection Restricted: Only Yogesh or Vijay can select custom dates." }, { status: 403 });
+            return safeApiResponse({ error: "Date Selection Restricted: Only Yogesh or Vijay can select custom dates." }, 403);
         }
 
         // Ensure user exists in DB
-        // NOTE: Replaced upsert with findUnique + create to avoid P2010 (Transactions not supported) on standalone Mongo
-        let dbUser = await prisma.user.findUnique({
+        let dbUser = await safeDbCall(() => prisma.user.findUnique({
             where: { clerkId: user.id },
-        });
+        }), null);
 
         if (!dbUser) {
-            dbUser = await prisma.user.create({
+            dbUser = await safeDbCall(() => prisma.user.create({
                 data: {
                     clerkId: user.id,
                     email: user.emailAddresses[0].emailAddress,
                     name: `${user.firstName || ""} ${user.lastName || ""}`.trim(),
                 },
-            });
+            }), null);
         }
+
+        if (!dbUser) return safeApiResponse({ error: "Database unreachable" }, 503);
 
         let newLog;
         if (type === "workout") {
-            newLog = await prisma.workoutLog.create({
+            newLog = await safeDbCall(() => prisma.workoutLog.create({
                 data: {
-                    userId: dbUser.id,
+                    userId: dbUser!.id,
                     date: new Date(data.date),
                     exercise: data.exercise,
                     sets: Number(data.sets),
                     reps: Number(data.reps),
                     weight: Number(data.weight),
                 },
-            });
+            }), null);
         } else if (type === "meal") {
-            newLog = await prisma.mealLog.create({
+            newLog = await safeDbCall(() => prisma.mealLog.create({
                 data: {
-                    userId: dbUser.id,
+                    userId: dbUser!.id,
                     date: new Date(data.date),
                     name: data.name,
                     calories: Number(data.calories),
@@ -110,30 +113,33 @@ export async function POST(req: Request) {
                     carbs: Number(data.carbs),
                     fats: Number(data.fats),
                 },
-            });
+            }), null);
         } else if (type === "weight") {
-            newLog = await prisma.weightLog.create({
+            newLog = await safeDbCall(() => prisma.weightLog.create({
                 data: {
-                    userId: dbUser.id,
+                    userId: dbUser!.id,
                     date: new Date(data.date),
                     weight: Number(data.weight),
                 },
-            });
+            }), null);
         } else {
-            return NextResponse.json({ error: "Invalid type" }, { status: 400 });
+            return safeApiResponse({ error: "Invalid type" }, 400);
         }
 
-        return NextResponse.json(newLog);
+        if (!newLog) return safeApiResponse({ error: "Failed to save log" }, 503);
+
+        return safeApiResponse(newLog);
     } catch (error) {
         console.error("Error saving log:", error);
-        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+        return safeApiResponse({ error: "Internal Server Error" }, 500);
     }
 }
+
 export async function DELETE(req: Request) {
     try {
         const user = await currentUser();
         if (!user) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+            return safeApiResponse({ error: "Unauthorized" }, 401);
         }
 
         const { searchParams } = new URL(req.url);
@@ -141,38 +147,41 @@ export async function DELETE(req: Request) {
         const id = searchParams.get("id");
         const all = searchParams.get("all");
 
-        const dbUser = await prisma.user.findUnique({
+        const dbUser = await safeDbCall(() => prisma.user.findUnique({
             where: { clerkId: user.id },
-        });
+        }), null);
 
         if (!dbUser) {
-            return NextResponse.json({ error: "User not found" }, { status: 404 });
+            return safeApiResponse({ error: "User not found" }, 404);
         }
 
         if (type === "weight" && all === "true") {
-            await prisma.weightLog.deleteMany({
+            await safeDbCall(() => prisma.weightLog.deleteMany({
                 where: { userId: dbUser.id },
-            });
-            return NextResponse.json({ success: true });
+            }), null);
+            return safeApiResponse({ success: true });
         }
 
         if (!id) {
-            return NextResponse.json({ error: "Missing ID" }, { status: 400 });
+            return safeApiResponse({ error: "Missing ID" }, 400);
         }
 
-        if (type === "workout") {
-            await prisma.workoutLog.delete({ where: { id } });
-        } else if (type === "meal") {
-            await prisma.mealLog.delete({ where: { id } });
-        } else if (type === "weight") {
-            await prisma.weightLog.delete({ where: { id } });
-        } else {
-            return NextResponse.json({ error: "Invalid type" }, { status: 400 });
-        }
+        const result = await safeDbCall(async () => {
+            if (type === "workout") {
+                return await prisma.workoutLog.delete({ where: { id: id! } });
+            } else if (type === "meal") {
+                return await prisma.mealLog.delete({ where: { id: id! } });
+            } else if (type === "weight") {
+                return await prisma.weightLog.delete({ where: { id: id! } });
+            }
+            return null;
+        }, null);
 
-        return NextResponse.json({ success: true });
+        if (!result) return safeApiResponse({ error: "Failed to delete" }, 503);
+
+        return safeApiResponse({ success: true });
     } catch (error) {
         console.error("Error deleting log:", error);
-        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+        return safeApiResponse({ error: "Internal Server Error" }, 500);
     }
 }

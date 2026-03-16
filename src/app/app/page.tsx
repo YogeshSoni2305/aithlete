@@ -211,9 +211,9 @@ export default function AppPage() {
                             <div id="plan-content">
                                 <AnimatePresence mode="wait">
                                     {activeTab === "workout" ? (
-                                        <WorkoutPlan key="workout" plan={plan.workoutPlan} />
+                                        <WorkoutPlan key="workout" plan={plan?.workoutPlan || []} />
                                     ) : (
-                                        <DietPlan key="diet" plan={plan.dietPlan} />
+                                        <DietPlan key="diet" plan={plan?.dietPlan || []} />
                                     )}
                                 </AnimatePresence>
                             </div>

@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { safeApiResponse } from "@/lib/safety";
 import OpenAI from "openai";
 
 export const dynamic = "force-dynamic";
@@ -11,10 +11,7 @@ const openai = new OpenAI({
 export async function GET() {
     try {
         if (!process.env.GROQ_API_KEY) {
-            return NextResponse.json(
-                { error: "Groq API Key not configured" },
-                { status: 500 }
-            );
+            return safeApiResponse({ error: "Groq API Key not configured" }, 500);
         }
 
         const completion = await openai.chat.completions.create({
@@ -29,16 +26,13 @@ export async function GET() {
                     content: "Give me one powerful motivational quote about fitness and transformation."
                 },
             ],
-        });
+        }, { timeout: 5000 }).catch(() => null);
 
-        const quote = completion.choices[0].message.content || "Your only limit is you.";
+        const quote = completion?.choices[0]?.message?.content || "Your only limit is you.";
 
-        return NextResponse.json({ quote });
+        return safeApiResponse({ quote });
     } catch (error) {
         console.error("Error generating quote:", error);
-        return NextResponse.json(
-            { quote: "Your only limit is you." },
-            { status: 200 }
-        );
+        return safeApiResponse({ quote: "Your only limit is you." });
     }
 }

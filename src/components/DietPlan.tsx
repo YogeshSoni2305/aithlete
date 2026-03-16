@@ -76,9 +76,11 @@ export default function DietPlan({ plan }: DietPlanProps) {
         }
 
         let text = "Here is your diet plan. ";
-        plan.forEach((day) => {
-            text += `${day.day}. Breakfast: ${day.breakfast.name}. Lunch: ${day.lunch.name}. Dinner: ${day.dinner.name}. `;
-        });
+        if (plan && Array.isArray(plan)) {
+            plan.forEach((day) => {
+                text += `${day.day || ""}. Breakfast: ${day.breakfast?.name || ""}. Lunch: ${day.lunch?.name || ""}. Dinner: ${day.dinner?.name || ""}. `;
+            });
+        }
 
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.onend = () => setIsSpeaking(false);
@@ -262,7 +264,12 @@ export default function DietPlan({ plan }: DietPlanProps) {
 
             {/* Diet Days Accordion */}
             <div className="grid gap-4">
-                {plan.map((day, index) => (
+                {(!plan || !Array.isArray(plan) || plan.length === 0) ? (
+                    <div className="text-center py-12 bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800">
+                        <p className="text-neutral-500">No diet plan data available.</p>
+                    </div>
+                ) : (
+                    plan.map((day, index) => (
                     <motion.div
                         key={index}
                         initial={{ opacity: 0, y: 20 }}
@@ -325,7 +332,7 @@ export default function DietPlan({ plan }: DietPlanProps) {
                             )}
                         </AnimatePresence>
                     </motion.div>
-                ))}
+                )))}
             </div>
         </motion.div>
     );

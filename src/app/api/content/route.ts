@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { safeApiResponse } from "@/lib/safety";
 import axios from "axios";
 import * as cheerio from "cheerio";
 
@@ -8,7 +8,7 @@ export async function GET(req: Request) {
     const type = searchParams.get("type"); // 'video' | 'recipe' | 'article'
 
     if (!query) {
-        return NextResponse.json({ error: "Query is required" }, { status: 400 });
+        return safeApiResponse({ error: "Query is required" }, 400);
     }
 
     const results: any[] = [];
@@ -99,5 +99,5 @@ export async function GET(req: Request) {
         }
     }
 
-    return NextResponse.json({ results });
+    return safeApiResponse({ results });
 }
