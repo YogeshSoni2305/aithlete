@@ -59,10 +59,10 @@ export default function AboutPage() {
                             </span>
                         </motion.div>
                         <h1 className="text-5xl sm:text-7xl font-bold mb-6">
-                            Hi, I'm <span className="gradient-text">Abhay</span>
+                            Hi, we're <span className="gradient-text">Yogesh and Vijay</span>
                         </h1>
                         <p className="text-xl sm:text-2xl text-neutral-600 dark:text-neutral-400 max-w-2xl mx-auto">
-                            A robotics enthusiast and full-stack developer with a story to tell.
+                            Robotics enthusiasts and full-stack developers with a story to tell.
                         </p>
                         <motion.div
                             animate={{ y: [0, 10, 0] }}
@@ -89,7 +89,7 @@ export default function AboutPage() {
                                 The <span className="text-purple-500">Gym Phase</span>
                             </h2>
                             <p className="text-lg text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                                It all started when I hit the gym. I was pumping iron, feeling the burn, and looking in the mirror thinking...
+                                It all started when we hit the gym. We were pumping iron, feeling the burn, and looking in the mirror thinking...
                             </p>
                         </motion.div>
 
@@ -100,8 +100,8 @@ export default function AboutPage() {
                             className="bg-white p-6 rounded-2xl shadow-xl border border-neutral-200 transform rotate-2"
                         >
                             <div className="text-center text-black">
-                                <p className="text-2xl font-bold italic mb-4">"My mooscles are getting bigger!"</p>
-                                <p className="text-sm text-neutral-500">- Me (probably), looking at a 1mm gain</p>
+                                <p className="text-2xl font-bold italic mb-4">"Our mooscles are getting bigger!"</p>
+                                <p className="text-sm text-neutral-500">- Us (probably), looking at a 1mm gain</p>
                                 <div className="mt-4 flex justify-center gap-2">
                                     <img src="/mooscles.png" alt="Mooscles" className="w-64 h-auto rounded-lg mx-auto" />
                                 </div>
@@ -126,7 +126,7 @@ export default function AboutPage() {
                                     But then... <span className="text-red-500">Reality Hit</span>
                                 </h2>
                                 <p className="text-base sm:text-xl text-neutral-600 dark:text-neutral-400">
-                                    I had the motivation, but life had other plans.
+                                    We had the motivation, but life had other plans.
                                 </p>
                             </div>
 
@@ -163,7 +163,7 @@ export default function AboutPage() {
                                         <div>
                                             <h3 className="text-xl lg:text-2xl font-bold mb-1 lg:mb-2">No Money</h3>
                                             <p className="text-sm lg:text-base text-neutral-600 dark:text-neutral-400">
-                                                Personal trainers and dieticians? In this economy? My wallet started crying just thinking about it. 💸
+                                                Personal trainers and dieticians? In this economy? Our wallets started crying just thinking about it. 💸
                                             </p>
                                         </div>
                                     </div>
@@ -184,7 +184,7 @@ export default function AboutPage() {
                             >
                                 <img
                                     src="/wallet-reality.png"
-                                    alt="My Wallet to Me"
+                                    alt="Our Wallets to Us"
                                     className="w-full sm:w-[120%] max-w-lg mx-auto rotate-0 lg:rotate-2 drop-shadow-2xl"
                                 />
                             </motion.div>
@@ -211,7 +211,7 @@ export default function AboutPage() {
                                 "Fine, I'll do it myself."
                             </h2>
                             <p className="text-xl sm:text-2xl text-neutral-300 max-w-2xl leading-relaxed">
-                                I realized I had the power of code (and AI) on my side. Why pay for a coach when I can build one?
+                                We realized we had the power of code (and AI) on our side. Why pay for a coach when we can build one?
                             </p>
                         </motion.div>
 
@@ -342,7 +342,7 @@ export default function AboutPage() {
                             AIthlete
                         </h2>
                         <p className="text-xl text-neutral-600 dark:text-neutral-400 mb-12 max-w-2xl mx-auto">
-                            My personal solution to getting fit without the hassle. Smart, personalized, and free (for me, and now for you).
+                            Our personal solution to getting fit without the hassle. Smart, personalized, and free (for us, and now for you).
                         </p>
 
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">

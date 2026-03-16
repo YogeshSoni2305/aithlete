@@ -32,8 +32,8 @@ export default function Tracker() {
     const [weightLogs, setWeightLogs] = useState<WeightLog[]>([]);
 
     const { user } = useUser();
-    const isAbhay = user?.fullName?.toLowerCase() === "abhay kumar" ||
-        (user?.firstName?.toLowerCase() === "abhay" && user?.lastName?.toLowerCase() === "kumar");
+    const isAdmin = ["yogesh", "vijay"].includes(user?.firstName?.toLowerCase() || "") ||
+        ["yogesh", "vijay"].includes(user?.fullName?.toLowerCase() || "");
 
 
     // Form states
@@ -259,7 +259,7 @@ export default function Tracker() {
                                 Log New Workout
                             </h3>
                             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-5">
-                                {isAbhay && (
+                                {isAdmin && (
                                     <div className="space-y-2">
                                         <label className="text-xs font-semibold text-neutral-500 uppercase tracking-wider ml-1">Date</label>
                                         <input
@@ -389,7 +389,7 @@ export default function Tracker() {
                                 Log Meal
                             </h3>
                             <div className="grid grid-cols-1 md:grid-cols-5 gap-5 mb-5">
-                                {isAbhay && (
+                                {isAdmin && (
                                     <div className="space-y-2 col-span-1 md:col-span-1">
                                         <label className="text-xs font-semibold text-neutral-500 uppercase tracking-wider ml-1">Date</label>
                                         <input
@@ -573,7 +573,7 @@ export default function Tracker() {
 
                         {/* Add Weight Form */}
                         <div className="bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl p-8 rounded-3xl border border-neutral-200/50 dark:border-neutral-800/50 shadow-xl shadow-blue-500/5 flex flex-col md:flex-row gap-6 items-end">
-                            {isAbhay && (
+                            {isAdmin && (
                                 <div className="w-full md:w-48">
                                     <label className="block text-xs font-semibold mb-2 text-neutral-500 uppercase tracking-wider ml-1">Date</label>
                                     <input
