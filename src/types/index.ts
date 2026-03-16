@@ -7,7 +7,7 @@ export interface UserData {
     goal: "Weight Loss" | "Muscle Gain" | "Maintenance" | "Endurance";
     level: "Beginner" | "Intermediate" | "Advanced";
     location: "Home" | "Gym" | "Outdoor";
-    dietaryPreferences: "Veg" | "Non-Veg" | "Vegan" | "Keto" | "None";
+    dietaryPreferences: "Veg" | "Non-Veg" | "Veg + Non-Veg" | "Vegan" | "Keto" | "None";
     medicalHistory?: string;
 }
 

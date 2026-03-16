@@ -21,10 +21,13 @@ export default function AppPage() {
     useEffect(() => {
         // Fetch saved plan from DB
         const fetchPlan = async () => {
+            console.log("Fetching existing plan...");
             try {
                 const res = await fetch("/api/plan");
+                console.log("Fetch plan status:", res.status);
                 if (res.ok) {
                     const data = await res.json();
+                    console.log("Fetched plan data:", data);
                     if (data) setPlan(data);
                 }
             } catch (error) {
@@ -48,7 +51,8 @@ export default function AppPage() {
     //     }
     // }, [plan]);
 
-    const handleGenerate = async (userData: UserData) => {
+        const handleGenerate = async (userData: UserData) => {
+        console.log("Starting plan generation for:", userData.name);
         setLoading(true);
         try {
             // 1. Generate Plan
@@ -58,17 +62,25 @@ export default function AppPage() {
                 body: JSON.stringify(userData),
             });
 
-            if (!res.ok) throw new Error("Failed to generate plan");
+            console.log("Generate API status:", res.status);
+            if (!res.ok) {
+                const errorData = await res.json().catch(() => ({}));
+                console.error("Generate API error:", errorData);
+                throw new Error(errorData.error || "Failed to generate plan");
+            }
 
             const generatedPlan = await res.json();
+            console.log("Generated plan successfully:", generatedPlan);
             setPlan(generatedPlan);
 
             // 2. Save Plan to DB
-            await fetch("/api/plan", {
+            console.log("Saving plan to database...");
+            const saveRes = await fetch("/api/plan", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(generatedPlan),
             });
+            console.log("Save plan status:", saveRes.status);
 
         } catch (error) {
             console.error(error);
@@ -226,7 +238,7 @@ export default function AppPage() {
                                 className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 dark:from-purple-500/5 dark:to-pink-500/5 rounded-2xl p-8 text-center border border-purple-200 dark:border-purple-900"
                             >
                                 <p className="text-lg font-medium text-neutral-700 dark:text-neutral-300 italic">
-                                    "{plan.motivation}"
+                                    "{plan?.motivation || "Your only limit is you."}"
                                 </p>
                             </motion.div>
                         </motion.div>

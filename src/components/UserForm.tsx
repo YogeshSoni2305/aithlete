@@ -350,8 +350,8 @@ export default function UserForm({ onSubmit, isLoading }: UserFormProps) {
                                 <div className="space-y-6">
                                     <div>
                                         <label className="text-sm font-medium text-neutral-500 uppercase tracking-wider mb-3 block">Dietary Preference</label>
-                                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
-                                            {["Veg", "Non-Veg", "Veg + Non-Veg", "Vegan", "Keto", "None"].map((diet) => (
+                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                            {["Veg", "Non-Veg", "Veg + Non-Veg"].map((diet) => (
                                                 <SelectionCard
                                                     key={diet}
                                                     label={diet}
