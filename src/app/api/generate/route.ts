@@ -185,7 +185,7 @@ export async function POST(req: Request) {
     } catch (apiError: any) {
       console.error("PRIMARY MODEL FAILED:", apiError.message);
       console.log("Attempting fallback to llama3-8b-8192...");
-      
+
       completion = await openai.chat.completions.create({
         model: "llama3-8b-8192", // Faster, smaller fallback
         messages: [
@@ -196,7 +196,7 @@ export async function POST(req: Request) {
           { role: "user", content: prompt },
         ],
         response_format: { type: "json_object" },
-        max_tokens: 4000,
+        max_tokens: 6000,
         temperature: 0.5,
       });
     }
